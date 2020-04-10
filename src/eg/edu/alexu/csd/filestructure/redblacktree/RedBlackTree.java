@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.filestructure.redblacktree;
 
+import javax.management.RuntimeErrorException;
 import java.util.ArrayList;
 
 public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<T,V> {
@@ -28,6 +29,7 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 	@Override
 	public V search(T key) {
 		if(root == null) return null;
+		if(key==null)  throw new RuntimeErrorException(null);
 		myNode found = searching(root, key);
 		if(found == null )return null;
 		return (V) found.getValue();
@@ -36,6 +38,7 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 	@Override
 	public boolean contains(T key) {
 		if(root == null) return false;
+		if(key==null)  throw new RuntimeErrorException(null);
 		myNode found = searching(root, key);
 		if(found == null )return false;
 		return true;
@@ -43,6 +46,8 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 
 	@Override
 	public void insert(T key, V value) {
+		if(key==null || value==null)  throw new RuntimeErrorException(null);
+
 		if(root==null) {
 			System.out.println("DSDs");
 
@@ -99,7 +104,7 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 			if(arr.size()==0) arr.add((myNode) node);
 			else arr.set(0,(myNode) node);
 			count=1;
-			System.out.println("her is the last node"+arr.get(0).getKey());
+//			System.out.println("her is the last node"+arr.get(0).getKey());
 			return node;
 		}
 		int k = key.compareTo((T) node.getKey());

@@ -1,4 +1,5 @@
 package eg.edu.alexu.csd.filestructure.redblacktree;
+import org.junit.Assert;
 
 public class node  {
 	public static void main(String[] args) {
