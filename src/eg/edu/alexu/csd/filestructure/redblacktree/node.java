@@ -7,10 +7,12 @@ public class node  {
 		 tree.insert(30,50); 
 	        tree.insert(20,30); 
 	        tree.insert(10,20); 
-//	        tree.insert(15,40); 
-//	        tree.insert(70,70); 
-//	        tree.insert(60,60); 
-//	        tree.insert(80,80); 
+	        tree.insert(15,40);
+	        tree.insert(70,70);
+	        tree.insert(60,60);
+	        tree.insert(80,80);
+		tree.insert(60,60);
+		tree.insert(80,80);
 	        System.out.println("******************************************************");
 	        System.out.println("Root : "+tree.getRoot().getKey());
 			System.out.println("left : "+tree.getRoot().getLeftChild().getKey());

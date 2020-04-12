@@ -431,6 +431,8 @@ public class UnitTest {
 			
 			String expectedAns = "12B9R15R7B10B13B22BNBNBNB11RNBNB20R24RNBNBNBNBNBNB";
 			String actualAns = levelOrder(redBlackTree.getRoot());
+
+			System.out.println("sssssssssss"+redBlackTree.getRoot().getKey());
 			Assert.assertEquals(expectedAns, actualAns);
 		}catch (Throwable e) {
 			TestRunner.fail("Fail to insert a key in the tree", e);
@@ -1371,11 +1373,11 @@ public class UnitTest {
 			Set<Integer> ans = treemap.keySet();
 			ArrayList<Integer> realAns = new ArrayList<>(t.keySet());
 			Collections.sort(realAns);
-			
 			int i = 0;
 			for (Integer elem : ans) {
 				Assert.assertEquals(elem, realAns.get(i++));
 			}
+
 			
 		} catch (Throwable e) {
  			TestRunner.fail("Fail in Keyset", e);
@@ -1648,6 +1650,8 @@ public class UnitTest {
 			}
 			Collection<String> ans = treemap.values();
 			Collection<String> ansReal = t.values();
+			System.out.println("aaa"+ans.size());
+			System.out.println("bbb"+ansReal.size());
 			Object[] ansArr = ans.toArray();
 			Object[] ansRealArr = ansReal.toArray();
 			Arrays.sort(ansArr);
@@ -1729,7 +1733,6 @@ public class UnitTest {
 	private boolean verifyProps(INode<Integer, String> root) {
 		return verifyProperty2(root) && verifyProperty3(root) && verifyProperty4(root) && verifyProperty5(root) && validateBST(root, null, null);
 	}
-
 	private boolean isRed(INode<Integer, String> node) {
 		if (node == null || node.isNull()) return INode.BLACK;
 		return node.getColor() == INode.RED;
