@@ -16,7 +16,7 @@ public class myNode <T extends Comparable<T>, V> implements INode<T,V> {
         this.color=true;
     }
 
-    
+
     @Override
     public void setParent(INode<T, V> parent) {
        this. parent= (myNode) parent;
@@ -24,7 +24,7 @@ public class myNode <T extends Comparable<T>, V> implements INode<T,V> {
 
     @Override
     public INode<T, V> getParent() {
-       
+
         return this.parent;
     }
 
@@ -50,7 +50,7 @@ public class myNode <T extends Comparable<T>, V> implements INode<T,V> {
 
     @Override
     public T getKey() {
-        
+
         return key;
     }
 

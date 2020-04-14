@@ -50,8 +50,6 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 		if(key==null || value==null)  throw new RuntimeErrorException(null);
 
 		if(root==null) {
-			System.out.println("DSDs");
-
 			myNode node=new  myNode (key, value);
 			root=node;
 			root.setColor(false);
@@ -63,64 +61,85 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 				t.setValue(value);
 				return ;
 			}
-			
+
 			myNode k=insertion(root, key, value);
 			k=arr.get(0);
 			size++;
 			if(k.getParent().getColor()) {
+
 				rotate(k);
 			}
-			
-			
-		}
-		
-	}
 
+
+		}
+
+	}
 	@Override
 	public boolean delete(T key) {
-	    if(key == null ) throw new RuntimeErrorException(null);
-		myNode found = searching(root, key);
-		if(found == null )return false;
-		if(found.getRightChild()==null && found.getLeftChild()!=null ){
-		    if( !found.getColor()) found.getLeftChild().setColor(false);
-		    found.getLeftChild().setParent(found.getParent());
-		    if(found.getParent().getLeftChild()==found){
-                found.getParent().setLeftChild(found.getLeftChild());
-            }else {
-                found.getParent().setRightChild(found.getLeftChild());
-            }
-		    found.setParent(null);
-		    found.setLeftChild(null);
-		    found = null;
+		if(key == null ) throw new RuntimeErrorException(null);
+		if(root ==null) throw new RuntimeErrorException(null);
+		myNode theOne =searching(root, key);
+		if(theOne == null) return false;
 
-        }else if(found.getRightChild()!=null && found.getLeftChild()==null ){
-            if( !found.getColor()) found.getLeftChild().setColor(false);
-            found.getRightChild().setParent(found.getParent());
-            if(found.getParent().getRightChild()==found){
-                found.getParent().setRightChild(found.getRightChild());
-            }else {
-                found.getParent().setLeftChild(found.getRightChild());
-            }
-            found.setParent(null);
-            found.setRightChild(null);
-            found = null;
-        }else if  (found.getRightChild()!=null && found.getLeftChild()!=null){
-		    myNode succ = minNodeGreater(found);
-		    T k = (T) found.getKey();
-		    V v= (V) found.getValue();
-		    found.setValue(succ.getValue());
-		    found.setColor(succ.getColor());
-		    succ.setValue(v);
-		    succ.setKey(k);
-		    delete((T) succ.getKey());
-        }else{
-		    //DoubleBlack Tree
-        }
+		if(theOne.getRightChild()!=null && theOne.getLeftChild() != null) {   //if the node has two childs
+			myNode swaping=predecessor(theOne) ;
+			T k=(T) theOne.getKey();
+			V v=(V) theOne.getValue();
+			theOne.setKey(swaping.getKey());
+			theOne.setValue(swaping.getValue());
+			swaping.setKey(k);
+			swaping.setValue(v);
+			delete(key);
+		}else if(theOne.getRightChild()!=null) {  //if the node has only Right child
+			if(theOne.getColor()) {      //the color is red
+				setChild(theOne, theOne.getRightChild());
+			}else {                    //the color is black
+				setChild(theOne, theOne.getRightChild());
+				theOne.getRightChild().setColor(false);
+				//*jbkbkbkjbkbkjbbbbbbbbbbbbbbbb
+			}
+			return true;
+		}else if(theOne.getLeftChild()!=null) { //if the node has only Left child
+			if(theOne.getColor()) {      //the color is red
+				setChild(theOne, theOne.getLeftChild());
+			}else {                    //the color is black
+				setChild(theOne, theOne.getLeftChild());
+				theOne.getLeftChild().setColor(false);
+				//bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+			}
+			return true;
+		}else {                                          //if the node has No childs
+			if(theOne.getColor()) {      //the color is red
+				setChild(theOne, theOne.getRightChild());
+				return true;
+			}else {                    //the color is black
+				//mmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+			}
+		}
+
 
 		return false;
 	}
-	
-   public myNode searching(myNode node, T key) {
+
+	public void setChild(myNode theOne,INode child) {
+		if(theOne.getParent()==null) {
+			root=(myNode) child;
+		}
+		else if(theOne.getParent().getLeftChild()==theOne)
+			theOne.getParent().setLeftChild(child);
+		else {theOne.getParent().setRightChild(child);}
+		if(child != null)child.setParent(theOne.getParent());
+	}
+
+	public myNode predecessor(myNode node) {
+		myNode temp=(myNode) node.getLeftChild();
+		while(temp.getRightChild()!=null) {
+			temp=(myNode) temp.getRightChild();
+		}
+		return temp;
+
+	}
+	public myNode searching(myNode node, T key) {
 		if(node == null) return null;
 
 		if( node.getKey()==key) return node;
@@ -132,7 +151,7 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 
 					node= (myNode) node.getRightChild();
 				}else return null;
-		}else {
+			}else {
 				if(node.getLeftChild()!=null){
 					node= (myNode) node.getLeftChild();
 				}else return null;
@@ -144,7 +163,7 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 //		}
 //			return searching((myNode) node.getLeftChild() , key);
 	}
-	
+
 
 	public myNode insertion(myNode node,T key,V value) {
 		myNode temp;
@@ -159,11 +178,11 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 		}
 		int k = key.compareTo((T) node.getKey());
 		if( k > 0 ) {
-			 node.setRightChild(insertion((myNode) node.getRightChild() , key,value));
-			 node.getRightChild().setParent(node);
+			node.setRightChild(insertion((myNode) node.getRightChild() , key,value));
+			node.getRightChild().setParent(node);
 		}else {
-		  node.setLeftChild(insertion((myNode) node.getLeftChild() , key,value));
-		  node.getLeftChild().setParent(node);
+			node.setLeftChild(insertion((myNode) node.getLeftChild() , key,value));
+			node.getLeftChild().setParent(node);
 		}
 		int c =0;
 //		if(node != null) {
@@ -202,14 +221,14 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 
 		return node;
 	}
-	void inorderRec(myNode iNode) { 
-        if (iNode != null) { 
-            inorderRec((myNode) iNode.getLeftChild()); 
-            System.out.println(iNode.getKey()); 
-            inorderRec((myNode) iNode.getRightChild()); 
-        } 
-    } 
-	
+	void inorderRec(myNode iNode) {
+		if (iNode != null) {
+			inorderRec((myNode) iNode.getLeftChild());
+			System.out.print(iNode.getKey());
+			inorderRec((myNode) iNode.getRightChild());
+		}
+	}
+
 	public void rotate(myNode x) {
 		boolean right,rightParent=false;
 		myNode y = (myNode) x.getParent();
@@ -228,7 +247,7 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 			right=false;
 		}else {right=true;}
 		if(s==null || !s.getColor()) {
-		  if(!rightParent) {
+			if(!rightParent) {
 				if(!right) {
 					if(z.getParent()!=null&&z.getParent().getLeftChild()==z) {
 						z.getParent().setLeftChild(y);
@@ -240,25 +259,25 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 					y.setRightChild(z);
 					y.setColor(false);
 					z.setColor(true);
-					
+
 				}else{
 					y.setRightChild(x.getLeftChild());
 					z.setLeftChild(x);
 					x.setParent(z);
 					x.setLeftChild(y);
 					y.setParent(x);
-					
+
 					rotate(y);
 				}
-		  }
+			}
 		}else{
-			  y.setColor(false);
-			  s.setColor(false);
-			  if(z.getParent()!=null) {
-				  z.setColor(true);
-				  if(z.getParent().getColor())rotate(z);
-			  }
-		  }
+			y.setColor(false);
+			s.setColor(false);
+			if(z.getParent()!=null) {
+				z.setColor(true);
+				if(z.getParent().getColor())rotate(z);
+			}
+		}
 	}
 
 
@@ -270,51 +289,5 @@ public class RedBlackTree <T extends Comparable<T>, V> implements IRedBlackTree<
 		}
 		return temp;
 	}
-    void DoubleBlack(myNode found){
-	    myNode p= (myNode) found.getParent();
-        myNode s = null;
-        if(p == null){
-            root = null;
-            return ;
-        }
-	    if(p.getLeftChild()==found){
-	        s= (myNode) p.getRightChild();
-        }else if (p.getRightChild() == found){
-	        s= (myNode) p.getLeftChild();
-        }
-	    myNode x= (myNode) s.getLeftChild();
-	    myNode y= (myNode) s.getRightChild();
-	    boolean xColor=false , yColor = false;
-	    if(x!=null) xColor= x.getColor();
-	    if(y!=null) yColor= y.getColor();
-	    if(p.getColor() && !s.getColor() && !xColor && !yColor){
-	        Case_4(found,p,s,x,y);
-        }else if (!p.getColor() && s.getColor() && !xColor && !yColor){
-	        //Case 2
-        }else if(!p.getColor() && !s.getColor() && !xColor && !yColor){
-            //Case 3
-        }else if(!p.getColor() && !s.getColor() && xColor && !yColor){
-            //Case 5
-        }else if(!s.getColor() &&yColor){
-	        //Case 6
-        }
 
-    }
-    void Case_2(myNode found,myNode p ,myNode s ,myNode x,myNode y){
-
-    }
-    void Case_3(myNode found,myNode p ,myNode s ,myNode x,myNode y){
-
-    }
-    void Case_4(myNode found,myNode p ,myNode s ,myNode x,myNode y){
-        s.setColor(true);
-        p.setColor(false);
-
-    }
-    void Case_5(myNode found,myNode p ,myNode s ,myNode x,myNode y){
-
-    }
-    void Case_6(myNode found,myNode s ,myNode y){
-
-    }
 }
